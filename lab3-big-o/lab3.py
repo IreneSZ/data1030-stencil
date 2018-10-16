@@ -7,12 +7,25 @@ def selection_sort(lst):
     :param lst:
     :return: lst, sorted
     """
-    pass
+    k = 0
+    x = 0
+    for j in range(0, len(lst)):
+        v = lst[j]
+        k = j
+        for i in range(j + 1, len(lst)):
+            x = lst[i]
+            if x < v:
+                v = x
+                k = i
 
+        lst[k] = lst[j]
+        lst[j] = v  #append the smallest element in the unsorted list to the sorted list
+
+    return lst
 
 def test_selection_sort():
-    pass
-
+    assert selection_sort([3,2,1]) == [1,2,3], "test failed"
+    assert selection_sort([9,8,7,6,5,4,3,2,8]) == [2,3,4,5,6,7,8,8,9], "test failed"
 
 def merge(lst, left, med, right):
     """
@@ -68,7 +81,27 @@ def partition(lst, low, high):
     :param high: index of last element in the sublist we are considering
     :return: a non-negative integer (the partition index)
     """
+    v = lst[high]
+    n_smaller = 0
+    for x in lst[low: high]:
+        if x < v:
+            n_smaller += 1
+    pos = low + n_smaller
+    lst[high] = lst[pos]
+    lst[pos] = v
 
+    i = low
+    j = high
+    while i < pos and j > pos:
+        if lst[i] < v:
+            i += 1
+        else:
+            while lst[j] > v:
+                j -= 1
+            w = lst[i]
+            lst[i] = lst[j]
+            lst[j] = w
+    return pos
 
 def test_partition():
     pass
@@ -82,7 +115,12 @@ def quick_sort_helper(lst, low, high):
     :param high: the index of last element in the sublist to be sorted
     :return:
     """
-
+    if low >= high:
+        return lst
+    p = partition(lst, low, high)
+    quick_sort_helper(lst, low, p - 1)
+    quick_sort_helper(lst, p + 1, high)
+    return lst
 
 def test_quick_sort_helper():
     pass
@@ -94,11 +132,12 @@ def quick_sort(lst):
     :param lst:
     :return: lst, sorted
     """
-
+    return quick_sort_helper(lst, 0, len(lst) - 1)
 
 def test_quick_sort():
-    pass
-
+    #print(quick_sort([3,2,1,7,8,10]))
+    assert quick_sort([3,2,1]) == [1,2,3], "test failed"
+    assert quick_sort([9,8,7,6,5,4,3,2,8]) == [2,3,4,5,6,7,8,8,9], "test failed"
 
 # TA testing method - do not modify any of this code
 def sorting_method_tester(method):

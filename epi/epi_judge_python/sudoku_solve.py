@@ -1,6 +1,7 @@
 import copy
 import functools
 import math
+import numpy as np
 
 from test_framework import generic_test
 from test_framework.test_failure import TestFailure
@@ -8,8 +9,32 @@ from test_framework.test_utils import enable_executor_hook
 
 
 def solve_sudoku(partial_assignment):
-    # TODO - you fill in here.
-    return True
+    C = np.asarray(partial_assignment).reshape(-1)
+    duplicate = True
+
+    for i in range(0, 80):
+        # if entry is zero, pass
+        if C[i] == 0:
+            continue
+
+        else:
+            for j in range(i + 1, 81):
+                if C[i] == C[j]:
+                    row_i = i // 9
+                    row_j = j // 9
+                    col_i = i % 9
+                    col_j = j % 9
+                    sub_matrix_i = [(i % 9) // 3, (i // 9) // 3]
+                    sub_matrix_j = [(j % 9) // 3, (j // 9) // 3]
+                    if row_i == row_j or col_i == col_j or sub_matrix_i == sub_matrix_j:
+                        duplicate = False
+                        break
+
+            if duplicate is False:
+                return duplicate
+                break
+
+    return duplicate
 
 
 def assert_unique_seq(seq):
